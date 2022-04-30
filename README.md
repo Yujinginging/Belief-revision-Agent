@@ -9,7 +9,8 @@ It contains four parts:
 4. Implementation of expansion of belief base.
 
 ## Before running the project, please check if you have the folowing liabraries:
-sympy
-sortedcontainers
-if no, please do "pip install ##" in cmd. Please also check for the version.
+1. sympy
+2. sortedcontainers
+
+If no, please do "pip install ##" in cmd. Please also check for the version.
 
