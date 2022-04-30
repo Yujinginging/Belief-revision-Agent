@@ -38,10 +38,8 @@ def dissociate(op, args):
 
 
 def entailment(base, formula):
-    """
-    Resolution-based entailment check for base |- formula.
-    """
-
+    
+    #Resolution-based entailment check for kb |= f.
     formula = to_cnf(formula)
 
     # Split base into conjuncts
@@ -64,7 +62,7 @@ def entailment(base, formula):
         ]
 
         for ci, cj in pairs:
-            resolvents = resolve(ci, cj)
+            resolvents = resolutionRule(ci, cj)
             if False in resolvents:
                 return True
             result = result.union(set(resolvents))
@@ -76,11 +74,10 @@ def entailment(base, formula):
                 clauses.append(c)
 
 
-def resolve(ci, cj):
-    """
-    Generate all clauses that can be obtained by applying
-    the resolution rule on ci and cj.
-    """
+def resolutionRule(ci, cj):
+    
+    #Generate all clauses that can be obtained by applying the resolution rule on ci and cj.
+    
 
     clauses = []
     dci = disjuncts(ci)
@@ -103,9 +100,10 @@ def resolve(ci, cj):
 
 
 
-#test entailment
+    #test entailment
 import sympy as sp
 
+from BaseBelief import BaseBelief
 def test():
     kb = sp.parse_expr("p | q").binary_symbols
     #kb ="p & q"
