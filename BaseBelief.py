@@ -3,6 +3,8 @@ from sortedcontainers import SortedList
 from operator import neg
 from sympy.logic.boolalg import to_cnf, And, Or, Equivalent
 #from utils import associate
+from Entailments import entailment
+from functools import reduce
 
 class Belief:
 
@@ -98,6 +100,33 @@ class BaseBelief:
 
         # Yield last rank
         yield last_rank, result
+        
+        
+    def contraction(self, formula):
+        if entailment(True, formula):
+            print("{formula} is a tautology")
+            return
+
+        old_rank = self.rank(formula)
+        x = BaseBelief()
+        x.beliefs = self.beliefs.copy()
+        for belief in self.beliefs:
+            # check if the rank is less or equal to old rank
+            if belief.rank <= old_rank:
+                belifbase = [to_cnf(x.formula) for x in filter(lambda p: x.rank >= (old_rank + 1), x.beliefs)]
+                belifbase = reduce(lambda p, q: p & q, belifbase, True)
+                if not entailment(belifbase, formula | belief.formula):
+                    rank_ = x.rank(belief.formula)
+                    x.beliefs.remove(belief)
+                    print(f" {belief} removed")
+                    if rank_ < old_rank or not entailment(belifbase, formula >> belief.formula):
+                        for i in self.beliefs:
+                            if formula >> belief.formula == i.formula:
+                                x.beliefs.remove(i)
+                        y = Belief(formula >> belief.formula, rank_)
+                        x.beliefs.add(y)
+                        print(f" {y} is added to belief basis")
+        self.beliefs = x.beliefs
 
     def clear(self):
         # clear base belief
