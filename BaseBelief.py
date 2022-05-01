@@ -102,7 +102,7 @@ class BaseBelief:
         yield last_rank, result
         
         
-    def contraction(self, formula, rank):
+    def contraction(self, formula):
         if entailment(True, formula):
             print("{formula} is a tautology")
             return
@@ -112,7 +112,7 @@ class BaseBelief:
         x.beliefs = self.beliefs.copy()
         for belief in self.beliefs:
             # check if the rank is less or equal to old rank
-            if rank <= old_rank:
+            if belief.rank <= old_rank:
                 belifbase = [to_cnf(x.formula) for x in filter(lambda p: x.rank >= (old_rank + 1), x.beliefs)]
                 belifbase = reduce(lambda p, q: p & q, belifbase, True)
                 if not entailment(belifbase, formula | belief.formula):
