@@ -117,14 +117,12 @@ class BaseBelief:
                 if not entailment(belifbase, formula | belief.formula):
                     rank_ = x.rank(belief.formula)
                     x.beliefs.remove(belief)
-                    print(f" {belief} removed")
                     if rank_ < old_rank:
                         for i in self.beliefs:
                             if formula >> belief.formula == i.formula:
                                 x.beliefs.remove(i)
                         y = Belief(formula >> belief.formula, rank_)
                         x.beliefs.add(y)
-                        print(f" {y} is added to belief basis")
         self.beliefs = x.beliefs
 
     def clear(self):
